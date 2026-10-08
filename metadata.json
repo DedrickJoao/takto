@@ -1,0 +1,6 @@
+{
+  "name": "TAKTO - Pagamentos Recorrentes & Gestão de Assinaturas",
+  "description": "Plataforma de alta performance para pagamentos recorrentes, gestão de assinaturas, checkout transparente, dunning inteligente e recuperação automática de vendas.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

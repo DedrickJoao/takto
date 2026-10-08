@@ -1,0 +1,518 @@
+import React, { useState } from 'react';
+import { useBilling } from '../../context/BillingContext';
+import { formatCurrency, formatNumber, formatDate } from '../../utils/formatters';
+import { REVENUE_CHART_DATA } from '../../data/mockData';
+import {
+  TrendingUp,
+  Users,
+  Repeat,
+  ShieldCheck,
+  Zap,
+  ArrowUpRight,
+  AlertCircle,
+  CheckCircle,
+  CreditCard,
+  QrCode,
+  Sparkles,
+  ExternalLink,
+  ChevronRight,
+} from 'lucide-react';
+
+export const OverviewView: React.FC = () => {
+  const {
+    metrics,
+    invoices,
+    subscribers,
+    plans,
+    retryInvoicePayment,
+    setSelectedSubscriber,
+    setSelectedInvoice,
+    setIsNewPlanModalOpen,
+    setIsNewSubscriberModalOpen,
+    setIsCheckoutSimulatorOpen,
+    setActiveTab,
+  } = useBilling();
+
+  const [chartMetric, setChartMetric] = useState<'mrr' | 'recovered' | 'subs'>('mrr');
+  const [retryingId, setRetryingId] = useState<string | null>(null);
+
+  const failedInvoices = invoices.filter((i) => i.status === 'failed' || i.status === 'pending');
+  const recentInvoices = invoices.slice(0, 5);
+
+  const handleQuickRetry = async (invoiceId: string) => {
+    setRetryingId(invoiceId);
+    await retryInvoicePayment(invoiceId);
+    setRetryingId(null);
+  };
+
+  // Find max value for chart scaling
+  const maxMrr = Math.max(...REVENUE_CHART_DATA.map((d) => d.mrr));
+  const maxRecovered = Math.max(...REVENUE_CHART_DATA.map((d) => d.recovered));
+  const maxSubs = Math.max(...REVENUE_CHART_DATA.map((d) => d.newSubs));
+
+  return (
+    <div className="space-y-8 pb-12">
+      {/* Page Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#142319] pb-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            Visão Geral de Faturamento Recorrente
+          </h1>
+          <p className="text-neutral-400 text-xs mt-1">
+            Métricas de assinaturas em tempo real, fluxo de caixa previsível e automação de recuperação.
+          </p>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsNewPlanModalOpen(true)}
+            className="px-3.5 py-2 text-xs font-medium text-neutral-300 bg-[#0c140f] hover:bg-[#121f17] border border-[#1b3123] rounded-lg transition-colors cursor-pointer"
+          >
+            + Criar Novo Plano
+          </button>
+          <button
+            onClick={() => setIsCheckoutSimulatorOpen(true)}
+            className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-lg transition-colors cursor-pointer shadow-sm"
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Testar Checkout TAKTO</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Primary KPI Grid (Zero-Pill, Tabular figures, dark theme) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Metric 1: MRR */}
+        <div className="p-4 rounded-xl bg-[#0c140f] border border-[#16271c] hover:border-emerald-500/30 transition-colors">
+          <div className="flex items-center justify-between text-neutral-400 text-xs">
+            <span>MRR (Receita Recorrente)</span>
+            <span className="text-emerald-400 flex items-center font-mono text-[11px]">
+              +{metrics.mrrGrowth}% MoM
+            </span>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-bold tracking-tight text-white font-mono tabular-nums">
+              {formatCurrency(metrics.mrr)}
+            </span>
+          </div>
+          <div className="mt-2 text-[11px] text-neutral-500 flex items-center gap-1.5">
+            <span>ARR projetado:</span>
+            <span className="text-neutral-300 font-mono tabular-nums">
+              {formatCurrency(metrics.arr)}
+            </span>
+          </div>
+        </div>
+
+        {/* Metric 2: Active Subscribers */}
+        <div className="p-4 rounded-xl bg-[#0c140f] border border-[#16271c] hover:border-emerald-500/30 transition-colors">
+          <div className="flex items-center justify-between text-neutral-400 text-xs">
+            <span>Assinantes Ativos</span>
+            <span className="text-emerald-400 flex items-center font-mono text-[11px]">
+              +{metrics.subscribersGrowth}%
+            </span>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-bold tracking-tight text-white font-mono tabular-nums">
+              {formatNumber(metrics.activeSubscribers)}
+            </span>
+            <span className="text-xs text-neutral-500">membros</span>
+          </div>
+          <div className="mt-2 text-[11px] text-neutral-500">
+            Distribuição em {plans.length} planos ativos
+          </div>
+        </div>
+
+        {/* Metric 3: Smart Dunning Recovery */}
+        <div className="p-4 rounded-xl bg-[#0c140f] border border-[#16271c] hover:border-emerald-500/30 transition-colors">
+          <div className="flex items-center justify-between text-neutral-400 text-xs">
+            <span>Taxa de Recuperação (IA)</span>
+            <span className="text-emerald-400 text-[11px] font-mono">
+              Smart Dunning
+            </span>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-bold tracking-tight text-emerald-400 font-mono tabular-nums">
+              {metrics.recoveryRate}%
+            </span>
+          </div>
+          <div className="mt-2 text-[11px] text-neutral-500 flex items-center gap-1.5">
+            <span>Resgatado no mês:</span>
+            <span className="text-neutral-300 font-mono tabular-nums">
+              {formatCurrency(metrics.recoveredAmountMonth)}
+            </span>
+          </div>
+        </div>
+
+        {/* Metric 4: Net Churn Rate */}
+        <div className="p-4 rounded-xl bg-[#0c140f] border border-[#16271c] hover:border-emerald-500/30 transition-colors">
+          <div className="flex items-center justify-between text-neutral-400 text-xs">
+            <span>Net Churn Mensal</span>
+            <span className="text-neutral-400 text-[11px] font-mono">
+              Saúde da Base
+            </span>
+          </div>
+          <div className="mt-2 flex items-baseline gap-2">
+            <span className="text-2xl font-bold tracking-tight text-white font-mono tabular-nums">
+              {metrics.netChurnRate}%
+            </span>
+            <span className="text-xs text-emerald-400 font-mono">Top 5% mercado</span>
+          </div>
+          <div className="mt-2 text-[11px] text-neutral-500">
+            Cancelamento voluntário sob controle
+          </div>
+        </div>
+      </div>
+
+      {/* Smart Alert / Dunning Action Banner if failed invoices exist */}
+      {failedInvoices.length > 0 && (
+        <div className="p-4 rounded-xl bg-[#121d15] border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-400 shrink-0 mt-0.5">
+              <AlertCircle className="w-4 h-4" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-semibold text-white">
+                  {failedInvoices.length} cobranças em atraso prontas para reprocessamento
+                </span>
+                <span className="text-neutral-400 text-xs">·</span>
+                <span className="text-xs text-amber-300 font-mono">
+                  {formatCurrency(failedInvoices.reduce((acc, i) => acc + i.amount, 0))} a recuperar
+                </span>
+              </div>
+              <p className="text-[11px] text-neutral-400 mt-0.5">
+                O motor inteligente do TAKTO pode executar retentativas em cascata com múltiplos adquirentes agora mesmo.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={() => handleQuickRetry(failedInvoices[0].id)}
+              disabled={retryingId !== null}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
+            >
+              <Zap className="w-3.5 h-3.5" />
+              <span>{retryingId ? 'Executando...' : 'Retentar Cobrança Crítica'}</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('dunning')}
+              className="px-3 py-1.5 text-xs font-medium text-neutral-300 hover:text-white bg-[#0a100c] border border-[#1c3022] rounded-lg transition-colors"
+            >
+              Ver Régua Completa
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Main Chart Section: MRR & Metrics Evolution */}
+      <div className="p-6 rounded-2xl bg-[#0a100c] border border-[#142319]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h2 className="text-sm font-semibold text-white">
+              Crescimento Previsível de Receita Recorrente
+            </h2>
+            <p className="text-xs text-neutral-400 mt-0.5">
+              Histórico consolidado dos últimos 6 meses com impacto do Smart Dunning
+            </p>
+          </div>
+
+          {/* Metric selector segmented buttons */}
+          <div className="flex items-center gap-1 p-1 bg-[#060907] border border-[#16271c] rounded-lg">
+            <button
+              onClick={() => setChartMetric('mrr')}
+              className={`px-3 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+                chartMetric === 'mrr'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              MRR Total
+            </button>
+            <button
+              onClick={() => setChartMetric('recovered')}
+              className={`px-3 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+                chartMetric === 'recovered'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              Recuperado por IA
+            </button>
+            <button
+              onClick={() => setChartMetric('subs')}
+              className={`px-3 py-1 text-xs font-medium rounded-md transition-all cursor-pointer ${
+                chartMetric === 'subs'
+                  ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                  : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              Novos Assinantes
+            </button>
+          </div>
+        </div>
+
+        {/* Visual Bar & Trend Chart */}
+        <div className="h-64 flex items-end gap-3 sm:gap-6 pt-6 border-b border-[#142319] pb-4">
+          {REVENUE_CHART_DATA.map((item, idx) => {
+            let heightPercent = 20;
+            let displayValue = '';
+
+            if (chartMetric === 'mrr') {
+              heightPercent = (item.mrr / maxMrr) * 100;
+              displayValue = formatCurrency(item.mrr);
+            } else if (chartMetric === 'recovered') {
+              heightPercent = (item.recovered / maxRecovered) * 100;
+              displayValue = formatCurrency(item.recovered);
+            } else {
+              heightPercent = (item.newSubs / maxSubs) * 100;
+              displayValue = `+${item.newSubs}`;
+            }
+
+            const isCurrent = idx === REVENUE_CHART_DATA.length - 1;
+
+            return (
+              <div
+                key={item.month}
+                className="flex-1 flex flex-col items-center h-full justify-end group relative"
+              >
+                {/* Tooltip on hover */}
+                <div className="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none bg-[#070b09] border border-emerald-500/40 px-2 py-1 rounded text-[11px] text-emerald-300 font-mono z-10 whitespace-nowrap shadow-xl">
+                  {displayValue}
+                </div>
+
+                {/* Column bar */}
+                <div className="w-full max-w-[54px] bg-[#0c140f] rounded-t-lg overflow-hidden flex flex-col justify-end p-0.5">
+                  <div
+                    style={{ height: `${Math.max(15, heightPercent)}%` }}
+                    className={`w-full rounded-t-md transition-all duration-500 ${
+                      isCurrent
+                        ? 'bg-gradient-to-t from-emerald-600 to-emerald-400 shadow-lg shadow-emerald-500/20'
+                        : 'bg-emerald-950/80 group-hover:bg-emerald-900 border border-emerald-800/40'
+                    }`}
+                  />
+                </div>
+
+                {/* X Axis Label */}
+                <span
+                  className={`mt-3 text-[11px] font-mono ${
+                    isCurrent ? 'text-emerald-400 font-semibold' : 'text-neutral-500'
+                  }`}
+                >
+                  {item.month}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Legend / Metrics summary footer */}
+        <div className="mt-4 flex flex-wrap items-center justify-between text-xs text-neutral-400 gap-4 pt-2">
+          <div className="flex items-center gap-6">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-sm bg-emerald-400" />
+              <span>Receita Consolidada</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-sm bg-emerald-950 border border-emerald-800" />
+              <span>Meses Anteriores</span>
+            </div>
+          </div>
+          <div className="text-[11px] text-neutral-500">
+            Atualizado a cada 60 segundos com sincronização webhook ativa
+          </div>
+        </div>
+      </div>
+
+      {/* Split Section: Métodos de Pagamento & Faturas Recentes */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Payment Methods breakdown */}
+        <div className="p-5 rounded-2xl bg-[#0a100c] border border-[#142319] space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-semibold text-white">Métodos de Cobrança</h3>
+            <span className="text-[11px] text-neutral-500 font-mono">Eficiência</span>
+          </div>
+
+          <div className="space-y-3">
+            {/* PIX Recorrente */}
+            <div className="p-3 rounded-xl bg-[#0c140f] border border-[#16271c]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                    <QrCode className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-white">PIX Automático Recorrente</span>
+                    <p className="text-[10px] text-neutral-500">Sem limite de cartão necessário</p>
+                  </div>
+                </div>
+                <span className="text-xs font-mono font-bold text-emerald-400">54%</span>
+              </div>
+              <div className="mt-2.5 w-full bg-[#070b09] h-1.5 rounded-full overflow-hidden">
+                <div className="bg-emerald-400 h-full w-[54%]" />
+              </div>
+              <div className="mt-2 flex items-center justify-between text-[10px] text-neutral-400">
+                <span>Aprovação: 99.4%</span>
+                <span className="text-emerald-400">Custo: 0.99%</span>
+              </div>
+            </div>
+
+            {/* Cartão de Crédito Recorrente */}
+            <div className="p-3 rounded-xl bg-[#0c140f] border border-[#16271c]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                    <CreditCard className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-white">Cartão de Crédito</span>
+                    <p className="text-[10px] text-neutral-500">Tokenizado com retentativa inteligente</p>
+                  </div>
+                </div>
+                <span className="text-xs font-mono font-bold text-neutral-300">42%</span>
+              </div>
+              <div className="mt-2.5 w-full bg-[#070b09] h-1.5 rounded-full overflow-hidden">
+                <div className="bg-emerald-600 h-full w-[42%]" />
+              </div>
+              <div className="mt-2 flex items-center justify-between text-[10px] text-neutral-400">
+                <span>Aprovação: 89.2%</span>
+                <span>Taxa média: 2.99%</span>
+              </div>
+            </div>
+
+            {/* Boleto Recorrente */}
+            <div className="p-3 rounded-xl bg-[#0c140f] border border-[#16271c]">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded bg-neutral-800 flex items-center justify-center text-neutral-400">
+                    <Repeat className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-semibold text-white">Boleto com Código de Barras</span>
+                    <p className="text-[10px] text-neutral-500">Compensação D+1 com aviso por WhatsApp</p>
+                  </div>
+                </div>
+                <span className="text-xs font-mono font-bold text-neutral-400">4%</span>
+              </div>
+              <div className="mt-2.5 w-full bg-[#070b09] h-1.5 rounded-full overflow-hidden">
+                <div className="bg-neutral-600 h-full w-[4%]" />
+              </div>
+              <div className="mt-2 flex items-center justify-between text-[10px] text-neutral-400">
+                <span>Aprovação: 72.0%</span>
+                <span>Custo fixo: R$ 1,90</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Recent Invoices & Transactions */}
+        <div className="p-5 rounded-2xl bg-[#0a100c] border border-[#142319] lg:col-span-2 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h3 className="text-sm font-semibold text-white">Últimas Transações Recorrentes</h3>
+                <p className="text-xs text-neutral-400">Faturamento processado em tempo real</p>
+              </div>
+              <button
+                onClick={() => setActiveTab('invoices')}
+                className="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-medium"
+              >
+                Ver todas ({invoices.length})
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="divide-y divide-[#142319]">
+              {recentInvoices.map((inv) => {
+                const isPaid = inv.status === 'paid' || inv.status === 'recovered';
+                const isFailed = inv.status === 'failed';
+                const isRecovered = inv.status === 'recovered';
+
+                return (
+                  <div
+                    key={inv.id}
+                    className="py-3 flex items-center justify-between gap-3 hover:bg-[#0d1610] px-2 rounded-lg transition-colors"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className={`w-7 h-7 rounded-md flex items-center justify-center text-xs ${
+                          isRecovered
+                            ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                            : isPaid
+                            ? 'bg-emerald-950 text-emerald-400'
+                            : isFailed
+                            ? 'bg-rose-950 text-rose-400'
+                            : 'bg-amber-950 text-amber-400'
+                        }`}
+                      >
+                        {isRecovered ? (
+                          <Sparkles className="w-3.5 h-3.5" />
+                        ) : isPaid ? (
+                          <CheckCircle className="w-3.5 h-3.5" />
+                        ) : (
+                          <AlertCircle className="w-3.5 h-3.5" />
+                        )}
+                      </div>
+
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-semibold text-neutral-200">
+                            {inv.subscriberName}
+                          </span>
+                          <span className="text-neutral-500 text-[10px]">·</span>
+                          <span className="text-[11px] text-neutral-400">{inv.planName}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-[10px] text-neutral-500 mt-0.5">
+                          <span>{inv.paymentMethod === 'pix_recurrent' ? 'PIX Recorrente' : 'Cartão de Crédito'}</span>
+                          <span>·</span>
+                          <span>Vencimento: {formatDate(inv.dueDate)}</span>
+                          {isRecovered && (
+                            <span className="text-emerald-400 font-medium">· Recuperado por IA</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <div className="text-xs font-bold text-white font-mono tabular-nums">
+                        {formatCurrency(inv.amount)}
+                      </div>
+                      <div className="mt-0.5">
+                        {isFailed ? (
+                          <button
+                            onClick={() => handleQuickRetry(inv.id)}
+                            disabled={retryingId === inv.id}
+                            className="text-[11px] text-emerald-400 hover:text-emerald-300 font-medium underline cursor-pointer"
+                          >
+                            {retryingId === inv.id ? 'Recuperando...' : 'Retentar agora'}
+                          </button>
+                        ) : (
+                          <span
+                            className={`text-[10px] font-mono ${
+                              isPaid ? 'text-emerald-400' : 'text-neutral-400'
+                            }`}
+                          >
+                            {inv.status === 'paid'
+                              ? 'Liquidada'
+                              : inv.status === 'recovered'
+                              ? 'Recuperada'
+                              : 'Pendente'}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-[#142319] flex items-center justify-between text-xs text-neutral-500">
+            <span>Taxa média de liquidação: 98.6%</span>
+            <span className="text-emerald-400">Proteção antifraude ativa</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
