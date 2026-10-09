@@ -40,104 +40,102 @@ export const PlansView: React.FC = () => {
   };
 
   return (
-    <div className="space-y-8 pb-12">
+    <div className="space-y-6 pb-12">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[#142319] pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#e1e3e5]">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white">
+          <h1 className="text-xl font-bold tracking-tight text-[#202223]">
             Planos Recorrentes & Precificação
           </h1>
-          <p className="text-neutral-400 text-xs mt-1">
+          <p className="text-[#6d7175] text-xs mt-0.5">
             Configure ciclos de cobrança, períodos de trial grátis e links de checkout transparente.
           </p>
         </div>
 
         <button
           onClick={() => setIsNewPlanModalOpen(true)}
-          className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-lg transition-colors cursor-pointer shadow-sm shadow-emerald-950"
+          className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium text-white bg-[#008060] hover:bg-[#006e52] active:bg-[#005e46] rounded-lg transition-colors cursor-pointer shadow-sm"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>+ Criar Novo Plano Recorrente</span>
+          <span>+ Criar Novo Plano</span>
         </button>
       </div>
 
-      {/* Grid of Plans */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Grid of Plans (Polaris Cards) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {plans.map((plan) => {
-          const isAnnual = plan.interval === 'year';
-
           return (
             <div
               key={plan.id}
-              className="p-6 rounded-2xl bg-[#0a100c] border border-[#16271c] hover:border-emerald-500/40 transition-all flex flex-col justify-between group"
+              className="p-5 rounded-xl bg-white border border-[#e1e3e5] shadow-sm hover:border-[#b5b8ba] transition-all flex flex-col justify-between group"
             >
               <div>
                 {/* Header of card */}
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <div>
-                    <span className="text-[10px] text-emerald-400 uppercase font-mono tracking-wider font-semibold">
+                    <span className="text-[10px] text-[#008060] uppercase tracking-wider font-semibold">
                       Ciclo {getIntervalBadge(plan.interval)}
                     </span>
-                    <h3 className="text-base font-bold text-white group-hover:text-emerald-300 transition-colors mt-0.5">
+                    <h3 className="text-sm font-bold text-[#202223] mt-0.5">
                       {plan.name}
                     </h3>
                   </div>
                   {plan.recommendedBadge && (
-                    <span className="px-2 py-0.5 text-[10px] font-semibold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded">
+                    <span className="px-2 py-0.5 text-[10px] font-semibold text-[#004c3f] bg-[#e3f1df] rounded">
                       {plan.recommendedBadge}
                     </span>
                   )}
                 </div>
 
-                <p className="text-xs text-neutral-400 min-h-[36px] line-clamp-2">
+                <p className="text-xs text-[#6d7175] min-h-[36px] line-clamp-2">
                   {plan.description}
                 </p>
 
                 {/* Price Display */}
-                <div className="mt-5 py-3 border-y border-[#142319] flex items-baseline justify-between">
+                <div className="mt-4 py-3 border-y border-[#f1f2f4] flex items-baseline justify-between">
                   <div>
-                    <span className="text-2xl font-bold font-mono text-white tabular-nums">
+                    <span className="text-2xl font-bold font-mono text-[#202223] tabular-nums">
                       {formatCurrency(plan.price)}
                     </span>
-                    <span className="text-xs text-neutral-500 ml-1">
+                    <span className="text-xs text-[#8c9196] ml-1">
                       /{getIntervalLabel(plan.interval)}
                     </span>
                   </div>
                   {plan.trialDays > 0 ? (
-                    <span className="text-[11px] text-sky-400 font-mono">
+                    <span className="text-[11px] text-[#005bd3] font-medium">
                       {plan.trialDays} dias trial grátis
                     </span>
                   ) : (
-                    <span className="text-[11px] text-neutral-500 font-mono">
+                    <span className="text-[11px] text-[#8c9196]">
                       Cobrança imediata
                     </span>
                   )}
                 </div>
 
                 {/* Performance stats for this plan */}
-                <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-                  <div className="p-2.5 rounded-lg bg-[#060907] border border-[#142319]">
-                    <span className="text-[10px] text-neutral-500 block">Assinantes</span>
-                    <span className="text-sm font-bold text-neutral-200 font-mono tabular-nums">
+                <div className="mt-3.5 grid grid-cols-2 gap-2 text-xs">
+                  <div className="p-2.5 rounded-lg bg-[#f9fafb] border border-[#e1e3e5]">
+                    <span className="text-[10px] text-[#6d7175] block">Assinantes</span>
+                    <span className="text-sm font-bold text-[#202223] font-mono tabular-nums">
                       {plan.activeSubscribers}
                     </span>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-[#060907] border border-[#142319]">
-                    <span className="text-[10px] text-neutral-500 block">MRR Gerado</span>
-                    <span className="text-sm font-bold text-emerald-400 font-mono tabular-nums">
+                  <div className="p-2.5 rounded-lg bg-[#f9fafb] border border-[#e1e3e5]">
+                    <span className="text-[10px] text-[#6d7175] block">MRR Gerado</span>
+                    <span className="text-sm font-bold text-[#008060] font-mono tabular-nums">
                       {formatCurrency(plan.mrrContribution)}
                     </span>
                   </div>
                 </div>
 
                 {/* Features included */}
-                <div className="mt-5 space-y-2">
-                  <span className="text-[10px] uppercase tracking-wider text-neutral-500 font-semibold block">
+                <div className="mt-4 space-y-2">
+                  <span className="text-[10px] uppercase tracking-wider text-[#6d7175] font-semibold block">
                     Incluso na Assinatura:
                   </span>
                   {plan.features.map((feature, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-neutral-300">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <div key={i} className="flex items-center gap-2 text-xs text-[#4a4d50]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#008060] shrink-0" />
                       <span>{feature}</span>
                     </div>
                   ))}
@@ -145,10 +143,10 @@ export const PlansView: React.FC = () => {
               </div>
 
               {/* Action Buttons */}
-              <div className="mt-6 pt-4 border-t border-[#142319] flex items-center gap-2">
+              <div className="mt-5 pt-3.5 border-t border-[#f1f2f4] flex items-center gap-2">
                 <button
                   onClick={() => handleOpenCheckoutForPlan(plan)}
-                  className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-xs font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-lg transition-colors cursor-pointer"
+                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 text-xs font-medium text-white bg-[#008060] hover:bg-[#006e52] active:bg-[#005e46] rounded-lg transition-colors cursor-pointer shadow-sm"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Testar Checkout</span>
@@ -156,7 +154,7 @@ export const PlansView: React.FC = () => {
 
                 <button
                   onClick={() => handleCopyCheckoutLink(plan)}
-                  className="p-2 text-neutral-400 hover:text-white bg-[#060907] border border-[#16271c] rounded-lg transition-colors cursor-pointer"
+                  className="p-1.5 text-[#6d7175] hover:text-[#202223] bg-white border border-[#c9cccf] rounded-lg transition-colors cursor-pointer shadow-sm"
                   title="Copiar Link de Pagamento Recorrente"
                 >
                   <Link2 className="w-4 h-4" />
@@ -167,39 +165,39 @@ export const PlansView: React.FC = () => {
         })}
       </div>
 
-      {/* Architecture feature callout */}
-      <div className="p-6 rounded-2xl bg-[#0c140f] border border-emerald-900/40 grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Architecture feature callout (Polaris Surface) */}
+      <div className="p-5 rounded-xl bg-white border border-[#e1e3e5] shadow-sm grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-[#e3f1df] flex items-center justify-center text-[#008060] shrink-0">
             <QrCode className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white">PIX Automático Sem Fricção</h4>
-            <p className="text-[11px] text-neutral-400 mt-1 leading-relaxed">
+            <h4 className="text-xs font-bold text-[#202223]">PIX Automático Sem Fricção</h4>
+            <p className="text-[11px] text-[#6d7175] mt-1 leading-relaxed">
               O assinante autoriza uma única vez no app do banco e todas as cobranças subsequentes debitam sem intervenção manual.
             </p>
           </div>
         </div>
 
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-[#e3f1df] flex items-center justify-center text-[#008060] shrink-0">
             <CreditCard className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white">Cobrança Não-Comprometida</h4>
-            <p className="text-[11px] text-neutral-400 mt-1 leading-relaxed">
+            <h4 className="text-xs font-bold text-[#202223]">Cobrança Não-Comprometida</h4>
+            <p className="text-[11px] text-[#6d7175] mt-1 leading-relaxed">
               Planos anuais podem debitar mensalmente sem travar o limite total do cartão de crédito do cliente, elevando a conversão em até +38%.
             </p>
           </div>
         </div>
 
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0">
+          <div className="w-8 h-8 rounded-lg bg-[#e3f1df] flex items-center justify-center text-[#008060] shrink-0">
             <ShieldCheck className="w-4 h-4" />
           </div>
           <div>
-            <h4 className="text-xs font-bold text-white">Atualização Automática de Cartão</h4>
-            <p className="text-[11px] text-neutral-400 mt-1 leading-relaxed">
+            <h4 className="text-xs font-bold text-[#202223]">Atualização Automática de Cartão</h4>
+            <p className="text-[11px] text-[#6d7175] mt-1 leading-relaxed">
               Integração direta com as bandeiras Mastercard e Visa para atualizar automaticamente cartões reemitidos ou expirados.
             </p>
           </div>

@@ -16,16 +16,16 @@ export const ToastContainer: React.FC = () => {
         return (
           <div
             key={toast.id}
-            className="pointer-events-auto p-4 rounded-xl bg-[#0c140f] border border-[#1b3123] shadow-2xl text-xs flex items-start justify-between gap-3 animate-in slide-in-from-bottom-3 duration-200"
+            className="pointer-events-auto p-3.5 rounded-xl bg-[#202223] border border-[#303030] shadow-2xl text-xs flex items-start justify-between gap-3 animate-in slide-in-from-bottom-3 duration-200"
           >
             <div className="flex items-start gap-2.5">
               <div
                 className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 ${
                   isSuccess
-                    ? 'text-emerald-400 bg-emerald-500/10'
+                    ? 'text-[#aee9d1] bg-[#008060]/40'
                     : isError
-                    ? 'text-rose-400 bg-rose-500/10'
-                    : 'text-sky-400 bg-sky-500/10'
+                    ? 'text-[#fed3d1] bg-[#d72c0d]/40'
+                    : 'text-sky-300 bg-sky-500/30'
                 }`}
               >
                 {isSuccess ? (
@@ -39,7 +39,7 @@ export const ToastContainer: React.FC = () => {
 
               <div>
                 <h4 className="font-semibold text-white">{toast.title}</h4>
-                <p className="text-neutral-400 text-[11px] mt-0.5 leading-relaxed">
+                <p className="text-[#e4e5e7] text-[11px] mt-0.5 leading-relaxed">
                   {toast.message}
                 </p>
               </div>
@@ -47,7 +47,7 @@ export const ToastContainer: React.FC = () => {
 
             <button
               onClick={() => removeToast(toast.id)}
-              className="p-1 text-neutral-500 hover:text-white transition-colors cursor-pointer"
+              className="p-1 text-[#8c9196] hover:text-white transition-colors cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>

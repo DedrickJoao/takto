@@ -28,14 +28,14 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 border-r border-[#142319] bg-[#070b09] flex flex-col justify-between shrink-0 hidden md:flex min-h-[calc(100vh-4rem)]">
+    <aside className="w-64 border-r border-[#e1e3e5] bg-[#f7f7f8] flex flex-col justify-between shrink-0 hidden md:flex min-h-[calc(100vh-3.5rem)]">
       {/* Navigation list */}
-      <div className="p-4 space-y-6">
+      <div className="p-3 space-y-5">
         <div>
-          <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-500/70 px-3">
+          <span className="text-[11px] font-semibold text-[#6d7175] uppercase tracking-wider px-3">
             Gestão Recorrente
           </span>
-          <nav className="mt-2 space-y-1">
+          <nav className="mt-2 space-y-0.5">
             {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
@@ -43,22 +43,22 @@ export const Sidebar: React.FC = () => {
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[13px] font-medium transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-emerald-500/10 text-emerald-300 border border-emerald-500/20'
-                      : 'text-neutral-400 hover:text-neutral-200 hover:bg-[#0c140f]'
+                      ? 'bg-white text-[#202223] font-semibold shadow-sm border border-[#e1e3e5]'
+                      : 'text-[#4a4d50] hover:text-[#202223] hover:bg-[#edeeef]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
                     <Icon
                       className={`w-4 h-4 ${
-                        isActive ? 'text-emerald-400' : 'text-neutral-500'
+                        isActive ? 'text-[#008060]' : 'text-[#6d7175]'
                       }`}
                     />
                     <span>{item.label}</span>
                   </div>
                   {item.highlight && (
-                    <span className="text-[10px] text-emerald-400 font-mono">
+                    <span className="text-[10px] bg-[#e3f1df] text-[#004c3f] font-semibold px-1.5 py-0.5 rounded">
                       {item.highlight}
                     </span>
                   )}
@@ -69,17 +69,17 @@ export const Sidebar: React.FC = () => {
         </div>
 
         {/* PIX Recorrente Highlight Box */}
-        <div className="p-3.5 rounded-xl bg-[#0c140f] border border-emerald-900/40 text-xs">
-          <div className="flex items-center gap-2 text-emerald-400 font-semibold mb-1">
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+        <div className="p-3.5 rounded-xl bg-white border border-[#e1e3e5] shadow-sm text-xs">
+          <div className="flex items-center gap-2 text-[#008060] font-semibold mb-1">
+            <CheckCircle2 className="w-4 h-4 text-[#008060]" />
             <span>PIX Automático Ativo</span>
           </div>
-          <p className="text-neutral-400 text-[11px] leading-relaxed">
+          <p className="text-[#6d7175] text-[11px] leading-relaxed">
             Débito em conta sem fricção mensal. Taxa padrão fixada em apenas 0.99%.
           </p>
           <button
             onClick={() => setIsCheckoutSimulatorOpen(true)}
-            className="mt-2.5 text-[11px] text-emerald-300 hover:text-emerald-200 flex items-center gap-1 font-medium"
+            className="mt-2.5 text-[11px] text-[#008060] hover:text-[#006e52] flex items-center gap-1 font-semibold cursor-pointer"
           >
             Ver fluxo do cliente
             <ExternalLink className="w-3 h-3" />
@@ -88,30 +88,30 @@ export const Sidebar: React.FC = () => {
       </div>
 
       {/* Footer Account & Status info */}
-      <div className="p-4 border-t border-[#142319] space-y-3">
+      <div className="p-3 border-t border-[#e1e3e5] space-y-3 bg-[#f7f7f8]">
         <div className="px-2">
-          <div className="flex items-center justify-between text-xs text-neutral-400">
+          <div className="flex items-center justify-between text-xs text-[#6d7175]">
             <span>MRR Atual</span>
-            <span className="text-white font-mono font-semibold tabular-nums">
+            <span className="text-[#202223] font-semibold tabular-nums">
               {formatCurrency(metrics.mrr)}
             </span>
           </div>
-          <div className="flex items-center justify-between text-[11px] text-neutral-500 mt-1">
+          <div className="flex items-center justify-between text-[11px] text-[#6d7175] mt-1">
             <span>Status Gateway</span>
-            <span className="flex items-center gap-1 text-emerald-400 font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="flex items-center gap-1.5 text-[#008060] font-medium">
+              <span className="w-2 h-2 rounded-full bg-[#008060]"></span>
               Operacional
             </span>
           </div>
         </div>
 
-        <div className="p-2.5 rounded-lg bg-[#0a100c] border border-[#142319] flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded bg-emerald-950 border border-emerald-800 flex items-center justify-center text-emerald-400 font-bold text-xs">
+        <div className="p-2.5 rounded-lg bg-white border border-[#e1e3e5] shadow-sm flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded bg-[#e3f1df] border border-[#aee9d1] flex items-center justify-center text-[#004c3f] font-bold text-xs">
             TK
           </div>
           <div className="overflow-hidden">
-            <p className="text-xs font-semibold text-neutral-200 truncate">Takto Pay Ltda</p>
-            <p className="text-[10px] text-neutral-500 font-mono truncate">48.910.112/0001-90</p>
+            <p className="text-xs font-semibold text-[#202223] truncate">Takto Pay Ltda</p>
+            <p className="text-[10px] text-[#6d7175] font-mono truncate">48.910.112/0001-90</p>
           </div>
         </div>
       </div>

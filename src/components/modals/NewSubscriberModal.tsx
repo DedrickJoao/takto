@@ -39,23 +39,23 @@ export const NewSubscriberModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-lg bg-[#0a100c] border border-[#1b3123] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="w-full max-w-lg bg-white border border-[#e1e3e5] rounded-xl shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="p-6 border-b border-[#142319] flex items-center justify-between bg-[#070b09]">
+        <div className="p-5 border-b border-[#e1e3e5] flex items-center justify-between bg-[#f7f7f8]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+            <div className="w-8 h-8 rounded-lg bg-[#e3f1df] border border-[#aee9d1] flex items-center justify-center text-[#004c3f]">
               <UserPlus className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-sm font-bold text-white">Nova Assinatura Manual</h2>
-              <p className="text-[11px] text-neutral-400">Cadastre um cliente diretamente na plataforma</p>
+              <h2 className="text-sm font-bold text-[#202223]">Nova Assinatura Manual</h2>
+              <p className="text-[11px] text-[#6d7175]">Cadastre um cliente diretamente na plataforma</p>
             </div>
           </div>
 
           <button
             onClick={() => setIsNewSubscriberModalOpen(false)}
-            className="p-1.5 text-neutral-400 hover:text-white rounded-lg hover:bg-[#121f17] transition-colors"
+            className="p-1.5 text-[#6d7175] hover:text-[#202223] rounded-lg hover:bg-[#edeeef] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -64,59 +64,59 @@ export const NewSubscriberModal: React.FC = () => {
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4 text-xs">
           <div className="space-y-1">
-            <label className="text-neutral-400 font-medium">Nome do Assinante *</label>
+            <label className="text-[#4a4d50] font-medium">Nome do Assinante *</label>
             <input
               type="text"
               required
               placeholder="Ex: Gabriela Medeiros"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-3 py-2 bg-[#060907] border border-[#16271c] rounded-lg text-white focus:outline-none focus:border-emerald-500"
+              className="w-full px-3 py-2 bg-white border border-[#c9cccf] rounded-lg text-[#202223] focus:outline-none focus:border-[#008060] focus:ring-1 focus:ring-[#008060]"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="text-neutral-400 font-medium">Email *</label>
+              <label className="text-[#4a4d50] font-medium">Email *</label>
               <input
                 type="email"
                 required
                 placeholder="gabriela@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3 py-2 bg-[#060907] border border-[#16271c] rounded-lg text-white focus:outline-none focus:border-emerald-500"
+                className="w-full px-3 py-2 bg-white border border-[#c9cccf] rounded-lg text-[#202223] focus:outline-none focus:border-[#008060] focus:ring-1 focus:ring-[#008060]"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="text-neutral-400 font-medium">Telefone / WhatsApp</label>
+              <label className="text-[#4a4d50] font-medium">Telefone / WhatsApp</label>
               <input
                 type="text"
                 placeholder="(11) 98765-4321"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-3 py-2 bg-[#060907] border border-[#16271c] rounded-lg text-white focus:outline-none focus:border-emerald-500"
+                className="w-full px-3 py-2 bg-white border border-[#c9cccf] rounded-lg text-[#202223] focus:outline-none focus:border-[#008060] focus:ring-1 focus:ring-[#008060]"
               />
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="text-neutral-400 font-medium">CPF ou CNPJ</label>
+            <label className="text-[#4a4d50] font-medium">CPF ou CNPJ</label>
             <input
               type="text"
               placeholder="123.456.789-00"
               value={document}
               onChange={(e) => setDocument(e.target.value)}
-              className="w-full px-3 py-2 bg-[#060907] border border-[#16271c] rounded-lg text-white focus:outline-none focus:border-emerald-500"
+              className="w-full px-3 py-2 bg-white border border-[#c9cccf] rounded-lg text-[#202223] focus:outline-none focus:border-[#008060] focus:ring-1 focus:ring-[#008060]"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-neutral-400 font-medium">Plano Contratado *</label>
+            <label className="text-[#4a4d50] font-medium">Plano Contratado *</label>
             <select
               value={planId}
               onChange={(e) => setPlanId(e.target.value)}
-              className="w-full px-3 py-2 bg-[#060907] border border-[#16271c] rounded-lg text-white focus:outline-none focus:border-emerald-500"
+              className="w-full px-3 py-2 bg-white border border-[#c9cccf] rounded-lg text-[#202223] focus:outline-none focus:border-[#008060]"
             >
               {plans.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -128,18 +128,18 @@ export const NewSubscriberModal: React.FC = () => {
 
           {/* Payment Method Selector */}
           <div className="space-y-1.5 pt-1">
-            <label className="text-neutral-400 font-medium">Método de Cobrança</label>
+            <label className="text-[#4a4d50] font-medium">Método de Cobrança</label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setPaymentMethod('pix_recurrent')}
                 className={`p-2.5 rounded-lg border flex items-center justify-center gap-2 cursor-pointer transition-colors ${
                   paymentMethod === 'pix_recurrent'
-                    ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 font-semibold'
-                    : 'bg-[#060907] border-[#16271c] text-neutral-400'
+                    ? 'bg-[#e3f1df] border-[#008060] text-[#004c3f] font-semibold'
+                    : 'bg-white border-[#c9cccf] text-[#6d7175]'
                 }`}
               >
-                <QrCode className="w-4 h-4" />
+                <QrCode className="w-4 h-4 text-[#008060]" />
                 <span>PIX Automático</span>
               </button>
 
@@ -148,28 +148,28 @@ export const NewSubscriberModal: React.FC = () => {
                 onClick={() => setPaymentMethod('credit_card')}
                 className={`p-2.5 rounded-lg border flex items-center justify-center gap-2 cursor-pointer transition-colors ${
                   paymentMethod === 'credit_card'
-                    ? 'bg-emerald-500/10 border-emerald-500 text-emerald-400 font-semibold'
-                    : 'bg-[#060907] border-[#16271c] text-neutral-400'
+                    ? 'bg-[#e3f1df] border-[#008060] text-[#004c3f] font-semibold'
+                    : 'bg-white border-[#c9cccf] text-[#6d7175]'
                 }`}
               >
-                <CreditCard className="w-4 h-4" />
+                <CreditCard className="w-4 h-4 text-[#6d7175]" />
                 <span>Cartão de Crédito</span>
               </button>
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="pt-4 flex items-center justify-end gap-2 border-t border-[#142319]">
+          <div className="pt-4 flex items-center justify-end gap-2 border-t border-[#e1e3e5]">
             <button
               type="button"
               onClick={() => setIsNewSubscriberModalOpen(false)}
-              className="px-4 py-2 text-neutral-400 hover:text-white rounded-lg transition-colors cursor-pointer"
+              className="px-4 py-2 text-[#6d7175] hover:text-[#202223] rounded-lg transition-colors cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 font-semibold text-black bg-emerald-400 hover:bg-emerald-300 rounded-lg transition-colors cursor-pointer"
+              className="px-4 py-2 font-medium text-white bg-[#008060] hover:bg-[#006e52] active:bg-[#005e46] rounded-lg transition-colors cursor-pointer shadow-sm"
             >
               Confirmar Assinatura
             </button>

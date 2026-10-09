@@ -59,19 +59,19 @@ const MainContent: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-[#060907] text-neutral-100 flex flex-col font-sans">
+    <div className="min-h-screen bg-[#f6f6f7] text-[#202223] flex flex-col font-sans">
       <Navbar />
 
       <div className="flex-1 flex overflow-hidden">
         <Sidebar />
 
-        <main className="flex-1 overflow-y-auto px-4 md:px-8 py-6 max-w-7xl mx-auto w-full">
+        <main className="flex-1 overflow-y-auto px-4 md:px-8 py-6 max-w-6xl mx-auto w-full">
           {renderActiveView()}
         </main>
       </div>
 
       {/* Mobile Bottom Navigation Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-[#070b09]/95 backdrop-blur-md border-t border-[#142319] flex items-center justify-around px-2 z-30">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-white/95 backdrop-blur-md border-t border-[#e1e3e5] flex items-center justify-around px-2 z-30 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -80,7 +80,7 @@ const MainContent: React.FC = () => {
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center justify-center p-1 cursor-pointer transition-colors ${
-                isActive ? 'text-emerald-400' : 'text-neutral-500'
+                isActive ? 'text-[#008060] font-medium' : 'text-[#6d7175] hover:text-[#202223]'
               }`}
             >
               <Icon className="w-4 h-4" />
