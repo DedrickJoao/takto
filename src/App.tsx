@@ -3,26 +3,33 @@ import { BillingProvider, useBilling } from './context/BillingContext';
 import { Navbar } from './components/layout/Navbar';
 import { Sidebar } from './components/layout/Sidebar';
 import { OverviewView } from './components/dashboard/OverviewView';
-import { SubscribersView } from './components/subscribers/SubscribersView';
-import { PlansView } from './components/plans/PlansView';
-import { InvoicesView } from './components/invoices/InvoicesView';
-import { DunningView } from './components/dunning/DunningView';
-import { CheckoutSimulatorView } from './components/checkout/CheckoutSimulatorView';
+import { ProductsView } from './components/products/ProductsView';
+import { MetricsView } from './components/metrics/MetricsView';
+import { SaasView } from './components/saas/SaasView';
+import { CampaignsView } from './components/campaigns/CampaignsView';
+import { AffiliatesView } from './components/affiliates/AffiliatesView';
+import { InviteFriendsView } from './components/invite/InviteFriendsView';
+import { RecoveryView } from './components/recovery/RecoveryView';
+import { WithdrawalsView } from './components/withdrawals/WithdrawalsView';
 import { WebhooksView } from './components/api/WebhooksView';
-import { NewSubscriberModal } from './components/modals/NewSubscriberModal';
-import { NewPlanModal } from './components/modals/NewPlanModal';
-import { SubscriberDetailModal } from './components/subscribers/SubscriberDetailModal';
-import { InvoiceDetailModal } from './components/invoices/InvoiceDetailModal';
+
+// Modals
+import { LevelModal } from './components/modals/LevelModal';
+import { FinancialReportModal } from './components/modals/FinancialReportModal';
+import { NewProductModal } from './components/modals/NewProductModal';
+import { SupportChatModal } from './components/modals/SupportChatModal';
 import { CheckoutModal } from './components/checkout/CheckoutModal';
 import { ToastContainer } from './components/layout/ToastContainer';
+
 import {
   LayoutDashboard,
-  Users,
-  Layers,
-  Receipt,
-  Sparkles,
-  Repeat,
-  Code2,
+  TrendingUp,
+  Package,
+  Target,
+  Users2,
+  Gift,
+  Wallet,
+  RefreshCw,
 } from 'lucide-react';
 
 const MainContent: React.FC = () => {
@@ -32,16 +39,26 @@ const MainContent: React.FC = () => {
     switch (activeTab) {
       case 'overview':
         return <OverviewView />;
-      case 'subscribers':
-        return <SubscribersView />;
-      case 'plans':
-        return <PlansView />;
-      case 'invoices':
-        return <InvoicesView />;
-      case 'dunning':
-        return <DunningView />;
-      case 'checkout_builder':
-        return <CheckoutSimulatorView />;
+      case 'metrics':
+        return <MetricsView />;
+      case 'saas_links':
+        return <SaasView subView="links" />;
+      case 'saas_builder':
+        return <SaasView subView="builder" />;
+      case 'products':
+        return <ProductsView />;
+      case 'campaigns':
+        return <CampaignsView />;
+      case 'affiliates':
+        return <AffiliatesView initialTab="my_affiliates" />;
+      case 'become_affiliate':
+        return <AffiliatesView initialTab="marketplace" />;
+      case 'invite_friends':
+        return <InviteFriendsView />;
+      case 'recovery':
+        return <RecoveryView />;
+      case 'withdrawals':
+        return <WithdrawalsView />;
       case 'developers':
         return <WebhooksView />;
       default:
@@ -51,27 +68,26 @@ const MainContent: React.FC = () => {
 
   const mobileNavItems = [
     { id: 'overview', label: 'Visão', icon: LayoutDashboard },
-    { id: 'subscribers', label: 'Assinantes', icon: Users },
-    { id: 'plans', label: 'Planos', icon: Layers },
-    { id: 'invoices', label: 'Faturas', icon: Receipt },
-    { id: 'dunning', label: 'Dunning', icon: Sparkles },
-    { id: 'checkout_builder', label: 'Checkout', icon: Repeat },
+    { id: 'products', label: 'Produtos', icon: Package },
+    { id: 'metrics', label: 'Métricas', icon: TrendingUp },
+    { id: 'withdrawals', label: 'Saques', icon: Wallet },
+    { id: 'invite_friends', label: 'Indicar', icon: Gift },
   ];
 
   return (
-    <div className="min-h-screen bg-[#f6f6f7] text-[#202223] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#060a08] text-[#f3f4f6] flex flex-col font-sans selection:bg-[#008060] selection:text-white">
       <Navbar />
 
       <div className="flex-1 flex overflow-hidden">
         <Sidebar />
 
-        <main className="flex-1 overflow-y-auto px-4 md:px-8 py-6 max-w-6xl mx-auto w-full">
+        <main className="flex-1 overflow-y-auto px-3 sm:px-6 md:px-8 py-6 max-w-7xl mx-auto w-full">
           {renderActiveView()}
         </main>
       </div>
 
       {/* Mobile Bottom Navigation Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-white/95 backdrop-blur-md border-t border-[#e1e3e5] flex items-center justify-around px-2 z-30 shadow-[0_-1px_3px_rgba(0,0,0,0.05)]">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-14 bg-[#080d0a]/95 backdrop-blur-md border-t border-[#16201a] flex items-center justify-around px-2 z-30">
         {mobileNavItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeTab === item.id;
@@ -80,7 +96,7 @@ const MainContent: React.FC = () => {
               key={item.id}
               onClick={() => setActiveTab(item.id)}
               className={`flex flex-col items-center justify-center p-1 cursor-pointer transition-colors ${
-                isActive ? 'text-[#008060] font-medium' : 'text-[#6d7175] hover:text-[#202223]'
+                isActive ? 'text-[#10b981] font-semibold' : 'text-neutral-500 hover:text-white'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -91,10 +107,10 @@ const MainContent: React.FC = () => {
       </div>
 
       {/* Modals & Portals */}
-      <NewSubscriberModal />
-      <NewPlanModal />
-      <SubscriberDetailModal />
-      <InvoiceDetailModal />
+      <LevelModal />
+      <FinancialReportModal />
+      <NewProductModal />
+      <SupportChatModal />
       <CheckoutModal />
       <ToastContainer />
     </div>

@@ -1,96 +1,133 @@
-export type SubscriptionStatus = 'active' | 'past_due' | 'trialing' | 'paused' | 'canceled';
+export type CurrencyCode = 'MZN' | 'ZAR' | 'BRL' | 'USD' | 'EUR' | 'INR' | 'AOA';
 
-export type PaymentMethodType = 'credit_card' | 'pix_recurrent' | 'boleto';
+export type ProductType = 'subscription' | 'single' | 'saas' | 'course' | 'ebook';
 
-export type PlanInterval = 'month' | 'quarter' | 'semester' | 'year';
+export type ProductStatus = 'active' | 'draft' | 'paused';
 
-export interface Plan {
+export interface Product {
   id: string;
   name: string;
   slug: string;
+  type: ProductType;
+  category: string;
+  price: number;
+  currency: CurrencyCode;
+  salesCount: number;
+  revenue: number;
+  status: ProductStatus;
+  checkoutUrl: string;
+  image?: string;
   description: string;
-  price: number; // in BRL
-  interval: PlanInterval;
-  trialDays: number;
-  activeSubscribers: number;
-  mrrContribution: number;
-  status: 'active' | 'archived';
-  features: string[];
-  recommendedBadge?: string;
+  orderBump?: {
+    name: string;
+    price: number;
+    enabled: boolean;
+  };
 }
 
-export interface Subscriber {
+export interface MetricSummary {
+  todayRevenue: number;
+  yesterdayRevenue: number;
+  monthRevenue: number;
+  totalSales: number;
+  conversionRate: number;
+  abandonmentRate: number;
+  averageTicket: number;
+  availableBalance: number;
+  pendingBalance: number;
+  level: {
+    currentLevel: string;
+    currentRevenue: number;
+    nextLevelThreshold: number;
+    nextLevelName: string;
+    progressPercentage: number;
+  };
+}
+
+export interface UtmMetric {
+  source: string;
+  medium: string;
+  campaign: string;
+  content: string;
+  clicks: number;
+  sales: number;
+  revenue: number;
+  conversion: number;
+}
+
+export interface CurrencyRevenueItem {
+  currency: CurrencyCode;
+  amount: number;
+  salesCount: number;
+  symbol: string;
+}
+
+export interface Campaign {
+  id: string;
+  name: string;
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  productName: string;
+  usesCount: number;
+  maxUses?: number;
+  active: boolean;
+  expiresAt: string;
+}
+
+export interface Affiliate {
   id: string;
   name: string;
   email: string;
   phone: string;
-  document: string; // CPF/CNPJ
-  planId: string;
-  planName: string;
-  amount: number;
-  interval: PlanInterval;
-  status: SubscriptionStatus;
-  paymentMethod: PaymentMethodType;
-  cardLast4?: string;
-  cardBrand?: 'mastercard' | 'visa' | 'elo' | 'amex';
-  pixKey?: string;
-  startDate: string;
-  nextBillingDate: string;
-  lastPaymentDate?: string;
-  dunningAttempts: number;
-  churnRisk: 'low' | 'medium' | 'high';
-  tags: string[];
+  productName: string;
+  commissionRate: number; // percentage, e.g. 30
+  salesCount: number;
+  totalEarned: number;
+  status: 'approved' | 'pending' | 'rejected';
 }
 
-export interface Invoice {
+export interface MarketplaceProduct {
   id: string;
-  subscriberId: string;
-  subscriberName: string;
-  subscriberEmail: string;
-  planName: string;
-  amount: number;
-  feeAmount: number;
-  netAmount: number;
-  status: 'paid' | 'pending' | 'failed' | 'recovered' | 'refunded';
-  paymentMethod: PaymentMethodType;
-  dueDate: string;
-  paidAt?: string;
-  attemptCount: number;
-  cardLast4?: string;
-  failureReason?: string;
-  receiptUrl?: string;
-}
-
-export interface DunningStep {
-  id: string;
-  dayOffset: number; // e.g. -2 (2 days before), 0 (day of billing), +1, +3, +5
   title: string;
-  channel: 'auto_retry' | 'whatsapp' | 'email' | 'sms';
-  description: string;
-  successRate: number;
-  active: boolean;
+  producer: string;
+  category: string;
+  price: number;
+  currency: CurrencyCode;
+  commissionRate: number;
+  commissionAmount: number;
+  temperature: number; // 1 to 100
+  isAffiliated: boolean;
 }
 
-export interface WebhookEventLog {
+export interface WithdrawalRequest {
   id: string;
-  event: 'subscription.created' | 'subscription.renewed' | 'invoice.paid' | 'invoice.payment_failed' | 'invoice.recovered' | 'subscription.canceled';
+  amount: number;
+  currency: CurrencyCode;
+  method: 'mpesa' | 'emola' | 'bank_transfer' | 'pix';
+  accountDetails: string;
+  status: 'completed' | 'processing' | 'pending';
+  requestedAt: string;
+  completedAt?: string;
+}
+
+export interface AbandonedCart {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  productName: string;
+  amount: number;
+  currency: CurrencyCode;
+  createdAt: string;
+  recovered: boolean;
+}
+
+export interface WebhookLog {
+  id: string;
+  event: string;
   timestamp: string;
-  status: 'success' | 'failed' | 'pending';
-  httpStatus: number;
+  status: 'success' | 'failed';
   endpoint: string;
   payload: Record<string, any>;
-}
-
-export interface MetricSummary {
-  mrr: number;
-  mrrGrowth: number;
-  arr: number;
-  activeSubscribers: number;
-  subscribersGrowth: number;
-  netChurnRate: number;
-  recoveryRate: number;
-  volumeToday: number;
-  volumeMonth: number;
-  failedInvoicesCount: number;
-  recoveredAmountMonth: number;
 }
